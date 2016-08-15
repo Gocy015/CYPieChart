@@ -24,9 +24,9 @@ Pod::Spec.new do |s|
   #   * Try to keep it short, snappy and to the point.
   #   * Write the description between the DESC delimiters below.
   #   * Finally, don't worry about the indent, CocoaPods strips it!
-s.description  = "CYPieChart is a view that displays your data in the form of a pie chart ,it's easy to use ,and easy to customize ,for more details ,plz visit the home page: https://github.com/Gocy015/CYPieChart-master"
+s.description  = "CYPieChart is a view that displays your data in the form of a pie chart ,it's easy to use ,and easy to customize ,for more details ,plz visit the home page: https://github.com/Gocy015/CYPieChart"
 
-  s.homepage     = "https://github.com/Gocy015/CYPieChart-master"
+  s.homepage     = "https://github.com/Gocy015/CYPieChart"
   # s.screenshots  = "www.example.com/screenshots_1.gif", "www.example.com/screenshots_2.gif"
 
 
