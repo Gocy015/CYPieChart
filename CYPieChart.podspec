@@ -17,15 +17,14 @@ Pod::Spec.new do |s|
 
   s.name         = "CYPieChart"
   s.version      = "1.0.0"
-  s.summary      = "A pie charrt for iOS to display your data"
+  s.summary      = "A pie chart for iOS to display your data"
 
   # This description is used to generate tags and improve search results.
   #   * Think: What does it do? Why did you write it? What is the focus?
   #   * Try to keep it short, snappy and to the point.
   #   * Write the description between the DESC delimiters below.
   #   * Finally, don't worry about the indent, CocoaPods strips it!
-  s.description  = <<-DESC
-                   DESC
+s.description  = "CYPieChart is a view that displays your data in the form of a pie chart ,it's easy to use ,and easy to customize ,for more details ,plz visit the home page: https://github.com/Gocy015/CYPieChart-master"
 
   s.homepage     = "https://github.com/Gocy015/CYPieChart-master"
   # s.screenshots  = "www.example.com/screenshots_1.gif", "www.example.com/screenshots_2.gif"
@@ -39,6 +38,7 @@ Pod::Spec.new do |s|
   #
 
   s.license      = "MIT"
+
   # s.license      = { :type => "MIT", :file => "FILE_LICENSE" }
 
 
@@ -63,7 +63,7 @@ Pod::Spec.new do |s|
   #  the deployment target. You can optionally include the target after the platform.
   #
 
-  # s.platform     = :ios
+   s.platform     = :ios , "8.0"
   # s.platform     = :ios, "5.0"
 
   #  When using multiple platforms
@@ -79,7 +79,7 @@ Pod::Spec.new do |s|
   #  Supports git, hg, bzr, svn and HTTP.
   #
 
-  s.source       = { :git => "https://github.com/Gocy015/CYPieChart", :tag => "1.0.0" }
+  s.source       = { :git => "https://github.com/Gocy015/CYPieChart.git", :tag => "1.0.0" }
 
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
@@ -90,7 +90,7 @@ Pod::Spec.new do |s|
   #  Not including the public_header_files will make all headers public.
   #
 
-  s.source_files  = "CYPieChart/*"
+  s.source_files  = "CYPieChart/*/*"
   s.exclude_files = "README.md"
 
   # s.public_header_files = "Classes/**/*.h"
