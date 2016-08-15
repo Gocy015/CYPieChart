@@ -43,7 +43,7 @@ static const NSInteger rightArrowTag = 22;
     [super viewWillAppear:animated];
     
     self.pieChart.titlePosition = 0.9f;
-    [self.pieChart updateApperance];
+    [self.pieChart updateAppearance];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -70,7 +70,7 @@ static const NSInteger rightArrowTag = 22;
     self.pieChart.objects = obj;
     self.pieChart.colors = colors;
     
-    [self.pieChart updateApperance];
+    [self.pieChart updateAppearance];
 }
 
 #pragma mark - CYPieChart Delegate

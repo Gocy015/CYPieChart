@@ -47,7 +47,7 @@ IB_DESIGNABLE
 
 @property (nonatomic ,weak) id <CYPieChartDelegate> delegate;
 
--(void)updateApperance;
+-(void)updateAppearance;
 
 -(void)goNextWithClockwise:(BOOL)clockwise;
 

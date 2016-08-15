@@ -301,7 +301,7 @@ static CGFloat kAnimationDuration = 0.22f;
 
 }
 
--(void)updateApperance{
+-(void)updateAppearance{
     [self reset];
     [self setNeedsDisplay];
     [self setupTitleLabels];
