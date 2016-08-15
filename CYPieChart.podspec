@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "CYPieChart"
-  s.version      = "1.0.0"
+  s.version      = "1.0.1"
   s.summary      = "A pie chart for iOS to display your data"
 
   # This description is used to generate tags and improve search results.
@@ -79,7 +79,7 @@ s.description  = "CYPieChart is a view that displays your data in the form of a 
   #  Supports git, hg, bzr, svn and HTTP.
   #
 
-  s.source       = { :git => "https://github.com/Gocy015/CYPieChart.git", :tag => "1.0.0" }
+  s.source       = { :git => "https://github.com/Gocy015/CYPieChart.git", :tag => "1.0.1" }
 
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
