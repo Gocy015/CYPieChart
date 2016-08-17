@@ -50,12 +50,7 @@ IB_DESIGNABLE
  */
 @property (nonatomic) IBInspectable CGFloat innerRadius;
 
-@property (nonatomic) IBInspectable CGFloat sliceBorderWidth;
-@property (nonatomic) IBInspectable UIColor *sliceBorderColor;
-
 @property (nonatomic ,weak) id <CYPieChartDelegate> delegate;
-
--(void)deselectCurrentPie;
 
 -(void)updateAppearance;
 

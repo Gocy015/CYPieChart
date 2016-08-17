@@ -33,15 +33,10 @@ static const NSInteger rightArrowTag = 22;
     // Do any additional setup after loading the view, typically from a nib.
     NSArray *obj = [self generateRandomData];
     NSArray *colors = [self generateRandomColorsOfCount:obj.count];
-    [self initGestures];
     
     self.pieChart.objects = obj;
     self.pieChart.colors = colors;
     self.pieChart.delegate = self;
-    self.pieChart.innerRadius = 20;
-    
-    self.pieChart.sliceBorderWidth = 1;
-    self.pieChart.sliceBorderColor = [UIColor blackColor];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -77,10 +72,6 @@ static const NSInteger rightArrowTag = 22;
     
     [self.pieChart updateAppearance];
 }
--(void)didTap:(UITapGestureRecognizer *)tap{
-    [self.pieChart deselectCurrentPie];
-}
-
 
 #pragma mark - CYPieChart Delegate
 
@@ -112,11 +103,6 @@ static const NSInteger rightArrowTag = 22;
     }
     
     return [NSArray arrayWithArray:arr];
-}
-
--(void)initGestures{
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(didTap:)];
-    [self.view addGestureRecognizer:tap];
 }
 
 @end

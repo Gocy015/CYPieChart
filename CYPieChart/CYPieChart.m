@@ -74,7 +74,6 @@ static CGFloat kAnimationDuration = 0.22f;
     _titlePosition = 0.6;
     
     _innerRadius = 0;
-    _sliceBorderWidth = 0;
 }
 
 
@@ -100,7 +99,7 @@ static CGFloat kAnimationDuration = 0.22f;
     
     
     CGPoint center = CGPointMake(self.bounds.size.width /2, self.bounds.size.height/2);
-    CGFloat radius = self.bounds.size.width / 2 - _sliceBorderWidth;
+    CGFloat radius = self.bounds.size.width / 2 ;
     
     
     UIBezierPath *shadow = [UIBezierPath new];
@@ -126,18 +125,13 @@ static CGFloat kAnimationDuration = 0.22f;
             [path closePath];
         }
         
-        [self.fillColors[i] setFill];
-        [shadow appendPath:path];
+            [self.fillColors[i] setFill];
+            [shadow appendPath:path];
+            
+        
         
         [path fill];
         
-        
-        if (_sliceBorderColor && _sliceBorderWidth > 0) {
-            [_sliceBorderColor setStroke];
-            shadow.lineWidth = _sliceBorderWidth;
-            [shadow stroke];
-        }
-
         [self.paths addObject:path];
         lastAngle = endAngle;
     }
@@ -161,7 +155,7 @@ static CGFloat kAnimationDuration = 0.22f;
     
     
     CGPoint center = CGPointMake(self.bounds.size.width /2, self.bounds.size.height/2);
-    CGFloat radius = self.bounds.size.width / 2 - _sliceBorderWidth;
+    CGFloat radius = self.bounds.size.width / 2 ;
     
     
     UIBezierPath *shadow = [UIBezierPath new];
@@ -190,20 +184,11 @@ static CGFloat kAnimationDuration = 0.22f;
         }else{
             
             [self.fillColors[i] setFill];
-            
-            
             [shadow appendPath:path];
             
         }
         
         [path fill];
-        
-        if (_sliceBorderColor && _sliceBorderWidth > 0) {
-            [_sliceBorderColor setStroke];
-            shadow.lineWidth = _sliceBorderWidth;
-            [shadow stroke];
-        }
-
         
         [self.paths addObject:path];
         lastAngle = endAngle;
@@ -269,15 +254,10 @@ static CGFloat kAnimationDuration = 0.22f;
     self.hidePie.hidden = YES;
     self.hidePie.path = nil;
     self.hidePie.fillColor = nil;
-    self.hidePie.borderWidth = 0;
-    self.hidePie.borderColor = nil;
     
     if (_lastIndex >= 0) {
         self.hidePie.fillColor = self.showPie.fillColor;
         self.hidePie.path = self.showPie.path;
-        self.hidePie.borderWidth = self.sliceBorderWidth;
-        self.hidePie.borderColor = self.sliceBorderColor;
-        
         self.hidePie.transform = self.showPie.transform;
         [self.hidePie setNeedsDisplay];
         self.hidePie.hidden = NO;
@@ -300,8 +280,6 @@ static CGFloat kAnimationDuration = 0.22f;
     self.showPie.hidden = YES;
     self.showPie.path = nil;
     self.showPie.fillColor = nil;
-    self.showPie.borderWidth = 0;
-    self.showPie.borderColor = nil;
     self.showPie.transform = CGAffineTransformIdentity;
     
     if (_tapIndex >= 0) {
@@ -310,9 +288,6 @@ static CGFloat kAnimationDuration = 0.22f;
         
         self.showPie.fillColor = self.fillColors[_tapIndex];
         self.showPie.path = self.paths[_tapIndex];
-        self.showPie.borderWidth = self.sliceBorderWidth;
-        self.showPie.borderColor = self.sliceBorderColor;
-        
         [self.showPie setNeedsDisplay];
         self.showPie.hidden = NO;
         
@@ -345,13 +320,6 @@ static CGFloat kAnimationDuration = 0.22f;
     [self setupTitleLabels];
 }
 
-
--(void)deselectCurrentPie{
-    if (_tapIndex != -1) {
-        _tapIndex = -1;
-        [self switchSelectedPie];
-    }
-}
 #pragma mark - Helpers
 
 -(void)reset{
@@ -519,18 +487,5 @@ static CGFloat kAnimationDuration = 0.22f;
     [self setNeedsDisplay];
 }
 
--(void)setSliceBorderColor:(UIColor *)sliceBorderColor{
-    _sliceBorderColor = sliceBorderColor;
-    
-    [self setNeedsDisplay];
-}
 
--(void)setSliceBorderWidth:(CGFloat)sliceBorderWidth{
-    if (sliceBorderWidth < 0) {
-        _sliceBorderWidth = 0;
-    }else{
-        _sliceBorderWidth = sliceBorderWidth;
-    }
-    [self setNeedsDisplay];
-}
 @end
