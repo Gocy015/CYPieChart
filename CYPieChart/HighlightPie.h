@@ -13,4 +13,7 @@
 @property (nonatomic ,strong) UIBezierPath *path;
 @property (nonatomic ,strong) UIColor *fillColor;
 
+@property (nonatomic ,strong) UIColor *borderColor;
+@property (nonatomic) CGFloat borderWidth;
+
 @end

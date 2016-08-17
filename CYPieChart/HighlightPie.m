@@ -44,6 +44,12 @@
     if (self.path && self.fillColor) {
         [self.fillColor setFill];
         [self.path fill];
+        
+        if (self.borderColor && self.borderWidth > 0) {
+            [self.borderColor setStroke];
+            self.path.lineWidth = self.borderWidth;
+            [self.path stroke];
+        }
     }
     self.layer.shadowPath = self.path.CGPath;
 }
