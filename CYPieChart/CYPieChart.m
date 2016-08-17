@@ -72,6 +72,8 @@ static CGFloat kAnimationDuration = 0.22f;
     _moveRadius = 12;
     _moveScale = 1;
     _titlePosition = 0.6;
+    
+    _innerRadius = 0;
 }
 
 
@@ -114,10 +116,15 @@ static CGFloat kAnimationDuration = 0.22f;
         lastAngle = endAngle;
         
         UIBezierPath *path = [UIBezierPath bezierPathWithArcCenter:center radius:radius startAngle:startAngle endAngle:endAngle clockwise:YES];
-        [path addLineToPoint:center];
-        [path closePath];
+        if(_innerRadius > 0 && _innerRadius < radius - 1){
+            [path addArcWithCenter:center radius:_innerRadius startAngle:endAngle endAngle:startAngle clockwise:NO];
+            [path closePath];
+        }
+        else{
+            [path addLineToPoint:center];
+            [path closePath];
+        }
         
-            
             [self.fillColors[i] setFill];
             [shadow appendPath:path];
             
@@ -161,8 +168,14 @@ static CGFloat kAnimationDuration = 0.22f;
         CGFloat endAngle = startAngle + angle;
         
         UIBezierPath *path = [UIBezierPath bezierPathWithArcCenter:center radius:radius startAngle:startAngle endAngle:endAngle clockwise:YES];
-        [path addLineToPoint:center];
-        [path closePath];
+        if(_innerRadius > 0 && _innerRadius < radius - 1){
+            [path addArcWithCenter:center radius:_innerRadius startAngle:endAngle endAngle:startAngle clockwise:NO];
+            [path closePath];
+        }
+        else{
+            [path addLineToPoint:center];
+            [path closePath];
+        }
         
         if (_tapIndex == i || _lastIndex == i) {
             
@@ -463,6 +476,15 @@ static CGFloat kAnimationDuration = 0.22f;
     _colors = colors;
     self.fillColors = [NSMutableArray arrayWithArray:colors];
     
+}
+
+-(void)setInnerRadius:(CGFloat)innerRadius{
+    if (innerRadius < 0) {
+        _innerRadius = 0;
+    }else{
+        _innerRadius = innerRadius;
+    }
+    [self setNeedsDisplay];
 }
 
 

@@ -45,6 +45,11 @@ IB_DESIGNABLE
  */
 @property (nonatomic) CGFloat titlePosition;
 
+/**
+ *  Assign this value to make the pie empty-centered
+ */
+@property (nonatomic) IBInspectable CGFloat innerRadius;
+
 @property (nonatomic ,weak) id <CYPieChartDelegate> delegate;
 
 -(void)updateAppearance;
