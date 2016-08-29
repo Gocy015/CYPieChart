@@ -5,12 +5,14 @@ CYPieChart is a subclass of UIView that displays your data in a pie chart.
 ### Preview
 
 By default ,all the description labels are place within the pie chart.
+
 ![Main](Images/CYPieChartMain.png)
 
 
 ![GIF](Images/CYPieChartGIF.gif)
 
 By these labels can also be placed outside.
+
 ![](Images/CYPieChart_Bottom.png)
 
 ![](Images/CYPieChart_Bottom.gif)
