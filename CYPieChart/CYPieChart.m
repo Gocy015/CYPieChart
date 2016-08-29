@@ -9,8 +9,9 @@
 #import "CYPieChart.h"
 #import "PieChartDataObject.h"
 #import "HighlightPie.h"
+#import "TitleView.h"
 
-@interface CYPieChart (){
+@interface CYPieChart () <TitleViewEventDelegate> {
     NSInteger _tapIndex;
     NSInteger _lastIndex;
     double _sum;
@@ -21,13 +22,20 @@
 @property (nonatomic ,strong) NSMutableArray *paths;
 @property (nonatomic ,strong) NSMutableArray *startAngles;
 @property (nonatomic ,strong) NSMutableArray *titleLabels;
+@property (nonatomic ,strong) NSMutableArray *titleViews;
 @property (nonatomic ,strong) NSMutableArray *fillColors;
 @property (nonatomic ,weak) HighlightPie *showPie;
 @property (nonatomic ,weak) HighlightPie *hidePie;
 
 @end
 
-static CGFloat kAnimationDuration = 0.22f;
+static const CGFloat kAnimationDuration = 0.22f;
+
+static const CGFloat kTitleViewWidth = CGFLOAT_MAX;
+static const CGFloat kTitleViewHeight = 16;
+static const CGFloat kTitleViewHorizontalPadding = 6;
+static const CGFloat kTitleViewVerticalPadding = 4;
+static const CGFloat kTitleViewInset =  6;
 
 @implementation CYPieChart
 
@@ -75,6 +83,8 @@ static CGFloat kAnimationDuration = 0.22f;
     
     _innerRadius = 0;
     _sliceBorderWidth = 0;
+    
+    _titleLayout = TitleLayout_Inside;
 }
 
 
@@ -85,6 +95,11 @@ static CGFloat kAnimationDuration = 0.22f;
         [v removeFromSuperview];
     }
     [self.titleLabels removeAllObjects];
+    
+    for (TitleView *view in self.titleViews) {
+        [view removeFromSuperview];
+    }
+    [self.titleViews removeAllObjects];
 }
 
 #pragma mark - Drawing & Drawing Helpers
@@ -100,7 +115,7 @@ static CGFloat kAnimationDuration = 0.22f;
     
     
     CGPoint center = CGPointMake(self.bounds.size.width /2, self.bounds.size.height/2);
-    CGFloat radius = self.bounds.size.width / 2 - _sliceBorderWidth;
+    CGFloat radius = MIN(self.bounds.size.width, self.bounds.size.height) / 2 - _sliceBorderWidth;
     
     
     UIBezierPath *shadow = [UIBezierPath new];
@@ -158,10 +173,25 @@ static CGFloat kAnimationDuration = 0.22f;
     
     CGContextRef context = UIGraphicsGetCurrentContext();
     
+    CGSize titleSize = [self sizeForTitleViews];
+    CGFloat hspace = 0;
+    CGFloat vspace = 0;
+    if (self.titleLayout == TitleLayout_Bottom) {
+        vspace = titleSize.height;
+    }else if(self.titleLayout == TitleLayout_Right){
+        hspace = titleSize.width;
+    }
     
+    CGFloat length = MIN(self.bounds.size.width - hspace, self.bounds.size.height - vspace);
+    CGFloat radius = length / 2 - _sliceBorderWidth;
     
-    CGPoint center = CGPointMake(self.bounds.size.width /2, self.bounds.size.height/2);
-    CGFloat radius = self.bounds.size.width / 2 - _sliceBorderWidth;
+    CGPoint center = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2);
+    if (self.titleLayout == TitleLayout_Bottom) {
+        center.y = (self.bounds.size.height - titleSize.height) / 2;
+    }else if(self.titleLayout == TitleLayout_Right){
+        center.x = (self.bounds.size.width - titleSize.width) / 2;
+    }
+    
     
     
     UIBezierPath *shadow = [UIBezierPath new];
@@ -191,11 +221,9 @@ static CGFloat kAnimationDuration = 0.22f;
             
             [self.fillColors[i] setFill];
             
-            
             [shadow appendPath:path];
             
         }
-        
         [path fill];
         
         if (_sliceBorderColor && _sliceBorderWidth > 0) {
@@ -214,10 +242,6 @@ static CGFloat kAnimationDuration = 0.22f;
     
     self.layer.shadowPath = shadow.CGPath;
 #endif
-    
-    
-    
-
 }
 
 #pragma mark - Instance Method
@@ -234,6 +258,20 @@ static CGFloat kAnimationDuration = 0.22f;
     [self switchSelectedPie];
 }
 
+-(CGSize)sizeForTitleViews{
+    CGFloat width = 0;
+    if (self.titleLayout == TitleLayout_Bottom) { //place at bottom , width no more than entire width
+        width = MIN(2 * kTitleViewWidth + kTitleViewHorizontalPadding + 2 *kTitleViewInset,self.bounds.size.width);
+    }else{ // place at right , width no more than half the entire width.
+        width = MIN(2 * kTitleViewWidth + kTitleViewHorizontalPadding + 2 *kTitleViewInset ,self.bounds.size.width / 2);
+    }
+
+    NSUInteger lines = ceil(self.objects.count / 2.0);
+    
+    CGFloat height = kTitleViewHeight * lines + kTitleViewHorizontalPadding * (lines - 1);
+    
+    return CGSizeMake(width, height + 2 * kTitleViewInset);
+}
 
 #pragma mark - Actions
 -(void)didTap:(UITapGestureRecognizer *)tap{
@@ -335,14 +373,14 @@ static CGFloat kAnimationDuration = 0.22f;
             [self.delegate pieChart:self didSelectPieAtIndex:_tapIndex];
         }
     }
-    [self setupTitleLabels];
+    [self setupTitles];
 
 }
 
 -(void)updateAppearance{
     [self reset];
     [self setNeedsDisplay];
-    [self setupTitleLabels];
+    [self setupTitles];
 }
 
 
@@ -352,6 +390,23 @@ static CGFloat kAnimationDuration = 0.22f;
         [self switchSelectedPie];
     }
 }
+
+#pragma mark - TitleViewEventDelegate
+-(void)titleViewDidTap:(TitleView *)titleView{
+    if (_isAnimating) {
+        return ;
+    }
+    NSUInteger index = [self.titleViews indexOfObject:titleView];
+    if (index == _tapIndex) {
+        _tapIndex = -1;
+    }
+    else{
+        _tapIndex = index;
+    }
+    [self switchSelectedPie];
+}
+
+
 #pragma mark - Helpers
 
 -(void)reset{
@@ -383,46 +438,44 @@ static CGFloat kAnimationDuration = 0.22f;
     }
 }
 
--(void)setupTitleLabels{
-    if (self.titleLabels.count != self.objects.count) {
-        for (UIView *v in self.titleLabels) {
-            [v removeFromSuperview];
+-(void)setupTitles{
+    if (self.titleLayout == TitleLayout_Inside) {
+        if (self.titleLabels.count != self.objects.count) {
+            for (UIView *v in self.titleLabels) {
+                [v removeFromSuperview];
+            }
+            [self.titleLabels removeAllObjects];
+            for (NSUInteger i = 0; i < self.objects.count; ++i) {
+                
+                UILabel *label = [UILabel new];
+                label.font = [UIFont systemFontOfSize:11 weight:UIFontWeightMedium];
+                label.textColor = [UIColor whiteColor];
+                label.text = self.objects[i].title;
+                label.shadowOffset = CGSizeMake(0, 4);
+                
+                [label sizeToFit];
+                
+                [self addSubview:label];
+                [self.titleLabels addObject:label];
+                
+                CGFloat range = [self angleForObjectAtIndex:i];
+                CGFloat start = [self.startAngles[i] doubleValue];
+                
+                CGFloat radius = self.bounds.size.width / 2;
+                CGFloat angle = start + range/2.0;
+                CGPoint offset = CGPointMake(cos(angle) * radius * self.titlePosition, sin(angle) * radius * self.titlePosition);
+                CGPoint center = CGPointMake(self.bounds.size.width / 2 , self.bounds.size.height / 2);
+                
+                label.center = CGPointMake(center.x + offset.x, center.y + offset.y);
+            }
         }
-        [self.titleLabels removeAllObjects];
-        for (NSUInteger i = 0; i < self.objects.count; ++i) {
-            
-            UILabel *label = [UILabel new];
-            label.font = [UIFont systemFontOfSize:11 weight:UIFontWeightMedium];
-            label.textColor = [UIColor whiteColor];
-            label.text = self.objects[i].title;
-            label.shadowOffset = CGSizeMake(0, 4);
-            
-            [label sizeToFit];
-            
-            [self addSubview:label];
-            [self.titleLabels addObject:label];
-            
-            CGFloat range = [self angleForObjectAtIndex:i];
-            CGFloat start = [self.startAngles[i] doubleValue];
-            
-            CGFloat radius = self.bounds.size.width / 2;
-            CGFloat angle = start + range/2.0;
-            CGPoint offset = CGPointMake(cos(angle) * radius * self.titlePosition, sin(angle) * radius * self.titlePosition);
-            CGPoint center = CGPointMake(self.bounds.size.width / 2 , self.bounds.size.height / 2);
-            
-            label.center = CGPointMake(center.x + offset.x, center.y + offset.y);
-        }
-    }
-    
-    
-    for (NSUInteger i = 0; i < self.objects.count; ++i) {
         
-        UILabel *label = self.titleLabels[i];
         
-        if (_tapIndex == i) {
+        if (_tapIndex >= 0 && _tapIndex < self.titleLabels.count){
             
-            CGFloat range = [self angleForObjectAtIndex:i];
-            CGFloat start = [self.startAngles[i] doubleValue];
+            UILabel *label = self.titleLabels[_tapIndex];
+            CGFloat range = [self angleForObjectAtIndex:_tapIndex];
+            CGFloat start = [self.startAngles[_tapIndex] doubleValue];
             
             CGFloat angle = start + range/2.0 ;
             
@@ -431,16 +484,103 @@ static CGFloat kAnimationDuration = 0.22f;
             [UIView animateWithDuration:kAnimationDuration animations:^{
                 label.transform = trans;
             }];
+
         }
-        else if (_lastIndex != _tapIndex && _lastIndex == i) {
+        if (_lastIndex != _tapIndex && _lastIndex >=0 && _lastIndex < self.titleLabels.count) {
+            
+            UILabel *label = self.titleLabels[_lastIndex];
             
             [UIView animateWithDuration:kAnimationDuration animations:^{
                 
                 label.transform = CGAffineTransformIdentity;
             }];
         }
+//        
+//        for (NSUInteger i = 0; i < self.objects.count; ++i) {
+//            
+//            UILabel *label = self.titleLabels[i];
+//            
+//            if (_tapIndex == i) {
+//                
+//                CGFloat range = [self angleForObjectAtIndex:i];
+//                CGFloat start = [self.startAngles[i] doubleValue];
+//                
+//                CGFloat angle = start + range/2.0 ;
+//                
+//                CGAffineTransform trans = CGAffineTransformMakeTranslation(cos(angle) * self.moveRadius, sin(angle) * self.moveRadius);
+//                trans = CGAffineTransformScale(trans, self.moveScale, self.moveScale);
+//                [UIView animateWithDuration:kAnimationDuration animations:^{
+//                    label.transform = trans;
+//                }];
+//            }
+//            else if (_lastIndex != _tapIndex && _lastIndex == i) {
+//                
+//                [UIView animateWithDuration:kAnimationDuration animations:^{
+//                    
+//                    label.transform = CGAffineTransformIdentity;
+//                }];
+//            }
+//        }
+
+    }else{
+        // title View
+        if (self.titleViews.count != self.objects.count) {
+            for (TitleView *view in self.titleViews) {
+                [view removeFromSuperview];
+            }
+            [self.titleViews removeAllObjects];
+            
+            //calculate frame.
+            CGSize titleSize = [self sizeForTitleViews];
+            CGPoint start = CGPointZero;
+            if (self.titleLayout == TitleLayout_Bottom) {
+                start = CGPointMake((self.bounds.size.width - titleSize.width) / 2 + kTitleViewInset, self.bounds.size.height - titleSize.height + kTitleViewInset);
+            }else if (self.titleLayout == TitleLayout_Right){
+                start = CGPointMake(self.bounds.size.width - titleSize.width + kTitleViewInset, (self.bounds.size.height - titleSize.height) / 2 + kTitleViewInset );
+            }
+            
+            CGFloat width = (titleSize.width - 2*kTitleViewInset - kTitleViewHorizontalPadding) / 2;
+            CGFloat height = kTitleViewHeight;
+            CGPoint origin = CGPointZero;
+            
+            for (NSUInteger i = 0; i < self.objects.count; ++i) {
+                TitleView *titleView = [TitleView new];
+                titleView.delegate = self;
+                titleView.rectColor = self.colors[i];
+                titleView.title = self.objects[i].title;
+                
+                [self addSubview:titleView];
+                [self.titleViews addObject:titleView];
+                
+                origin = CGPointMake(start.x + (i % 2) * (width + kTitleViewHorizontalPadding), start.y + (i / 2) * (height + kTitleViewVerticalPadding));
+                titleView.transform = CGAffineTransformIdentity;
+                titleView.frame = CGRectMake(origin.x, origin.y, width, height);
+            }
+            
+        }
+        
+        if (_tapIndex >= 0 && _tapIndex < self.titleViews.count){
+            
+            TitleView *titleView = self.titleViews[_tapIndex];
+            
+            CGAffineTransform trans = CGAffineTransformMakeScale(1.2, 1.2);
+            trans = CGAffineTransformTranslate(trans, 0.1*titleView.bounds.size.width, 0);
+            [UIView animateWithDuration:kAnimationDuration animations:^{
+                
+                titleView.transform = trans;
+            }];
+        }
+        if (_lastIndex != _tapIndex && _lastIndex >=0 && _lastIndex < self.titleViews.count) {
+            
+            TitleView *titleView = self.titleViews[_lastIndex];
+            [UIView animateWithDuration:kAnimationDuration animations:^{
+                
+                titleView.transform = CGAffineTransformIdentity;
+            }];
+        }
         
     }
+    
 }
 
 
@@ -466,6 +606,12 @@ static CGFloat kAnimationDuration = 0.22f;
         _titleLabels = [NSMutableArray new];
     }
     return _titleLabels;
+}
+-(NSMutableArray *)titleViews{
+    if (!_titleViews) {
+        _titleViews = [NSMutableArray new];
+    }
+    return _titleViews;
 }
 
 

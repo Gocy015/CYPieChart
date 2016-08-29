@@ -16,6 +16,7 @@
 		C33212B01D61AA71003749B9 /* CYPieChart.m in Sources */ = {isa = PBXBuildFile; fileRef = C33212AA1D61AA71003749B9 /* CYPieChart.m */; };
 		C33212B11D61AA71003749B9 /* PieChartDataObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C33212AD1D61AA71003749B9 /* PieChartDataObject.m */; };
 		C33212B21D61AA71003749B9 /* HighlightPie.m in Sources */ = {isa = PBXBuildFile; fileRef = C33212AF1D61AA71003749B9 /* HighlightPie.m */; };
+		C35051811D73D7AA00E8A750 /* TitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = C35051801D73D7AA00E8A750 /* TitleView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +36,8 @@
 		C33212AD1D61AA71003749B9 /* PieChartDataObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PieChartDataObject.m; sourceTree = "<group>"; };
 		C33212AE1D61AA71003749B9 /* HighlightPie.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HighlightPie.h; sourceTree = "<group>"; };
 		C33212AF1D61AA71003749B9 /* HighlightPie.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HighlightPie.m; sourceTree = "<group>"; };
+		C350517F1D73D7AA00E8A750 /* TitleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TitleView.h; sourceTree = "<group>"; };
+		C35051801D73D7AA00E8A750 /* TitleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TitleView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,11 +95,13 @@
 		C33212A81D61AA71003749B9 /* CYPieChart */ = {
 			isa = PBXGroup;
 			children = (
+				C33212AB1D61AA71003749B9 /* DataModel */,
 				C33212A91D61AA71003749B9 /* CYPieChart.h */,
 				C33212AA1D61AA71003749B9 /* CYPieChart.m */,
-				C33212AB1D61AA71003749B9 /* DataModel */,
 				C33212AE1D61AA71003749B9 /* HighlightPie.h */,
 				C33212AF1D61AA71003749B9 /* HighlightPie.m */,
+				C350517F1D73D7AA00E8A750 /* TitleView.h */,
+				C35051801D73D7AA00E8A750 /* TitleView.m */,
 			);
 			path = CYPieChart;
 			sourceTree = "<group>";
@@ -185,6 +190,7 @@
 				C33212B21D61AA71003749B9 /* HighlightPie.m in Sources */,
 				C332128B1D6197DD003749B9 /* AppDelegate.m in Sources */,
 				C33212881D6197DD003749B9 /* main.m in Sources */,
+				C35051811D73D7AA00E8A750 /* TitleView.m in Sources */,
 				C33212B01D61AA71003749B9 /* CYPieChart.m in Sources */,
 				C33212B11D61AA71003749B9 /* PieChartDataObject.m in Sources */,
 			);

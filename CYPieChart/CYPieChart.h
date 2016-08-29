@@ -12,6 +12,12 @@
 @class PieChartDataObject;
 @class CYPieChart;
 
+typedef NS_ENUM(NSUInteger ,TitleLayout){
+    TitleLayout_Inside,
+    TitleLayout_Bottom,
+    TitleLayout_Right
+};
+
 @protocol CYPieChartDelegate <NSObject>
 
 /**
@@ -40,8 +46,11 @@ IB_DESIGNABLE
  */
 @property (nonatomic) CGFloat moveScale;
 /**
- *  This value should be set within 0.0 ~ 1.0 , where 0 means each title label will be placed at the center of the pie chart,
- *  and 1 means each title label will be placed at the end of its corresponding pie;
+   This value should be set within 0.0 ~ 1.0 , where 0 means each title label will be placed at the center of the pie chart,
+   and 1 means each title label will be placed at the end of its corresponding pie.
+ 
+   @note
+    This value only works when titleLayout is set to TitleLayout_Inside.
  */
 @property (nonatomic) CGFloat titlePosition;
 
@@ -49,6 +58,11 @@ IB_DESIGNABLE
  *  Assign this value to make the pie empty-centered
  */
 @property (nonatomic) IBInspectable CGFloat innerRadius;
+
+/**
+ *  Position of the titles ,the default value is TitlePosition_Inside ,assigining this property to change the layout position of title labels.
+ */
+@property (nonatomic) TitleLayout titleLayout;
 
 @property (nonatomic) IBInspectable CGFloat sliceBorderWidth;
 @property (nonatomic) IBInspectable UIColor *sliceBorderColor;
@@ -60,5 +74,7 @@ IB_DESIGNABLE
 -(void)updateAppearance;
 
 -(void)goNextWithClockwise:(BOOL)clockwise;
+
+-(CGSize)sizeForTitleViews;
 
 @end

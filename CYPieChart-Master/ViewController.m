@@ -38,7 +38,7 @@ static const NSInteger rightArrowTag = 22;
     self.pieChart.objects = obj;
     self.pieChart.colors = colors;
     self.pieChart.delegate = self;
-    self.pieChart.innerRadius = 20;
+//    self.pieChart.innerRadius = 20;
     
     self.pieChart.sliceBorderWidth = 1;
     self.pieChart.sliceBorderColor = [UIColor blackColor];
@@ -47,7 +47,8 @@ static const NSInteger rightArrowTag = 22;
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
-    self.pieChart.titlePosition = 0.9f;
+//    self.pieChart.titlePosition = 0.9f;
+    self.pieChart.titleLayout = TitleLayout_Bottom;
     [self.pieChart updateAppearance];
 }
 
