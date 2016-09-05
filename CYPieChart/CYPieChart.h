@@ -7,10 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "TitleView.h"
 
 @class PieChartDataObject;
 @class CYPieChart;
+
 
 typedef NS_ENUM(NSUInteger ,TitleLayout){
     TitleLayout_Inside,
@@ -30,6 +31,8 @@ typedef NS_ENUM(NSUInteger ,TitleLayout){
 -(void)pieChart:(CYPieChart *)pieChart didSelectPieAtIndex:(NSInteger)index;
 
 @end
+
+typedef void(^TitleViewAnimationBlock)(TitleView *titleView,BOOL showing);
 
 IB_DESIGNABLE
 @interface CYPieChart : UIView
@@ -66,6 +69,8 @@ IB_DESIGNABLE
 
 @property (nonatomic) IBInspectable CGFloat sliceBorderWidth;
 @property (nonatomic) IBInspectable UIColor *sliceBorderColor;
+
+@property (nonatomic) TitleViewAnimationBlock titleViewAnimationBlock;
 
 @property (nonatomic ,weak) id <CYPieChartDelegate> delegate;
 

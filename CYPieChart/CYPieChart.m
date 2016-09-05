@@ -560,20 +560,37 @@ static const CGFloat kTitleViewInset =  6;
             
             TitleView *titleView = self.titleViews[_tapIndex];
             
-            CGAffineTransform trans = CGAffineTransformMakeScale(1.2, 1.2);
-            trans = CGAffineTransformTranslate(trans, 0.1*titleView.bounds.size.width, 0);
-            [UIView animateWithDuration:kAnimationDuration animations:^{
-                
-                titleView.transform = trans;
-            }];
+            if(self.titleViewAnimationBlock){
+                [UIView animateWithDuration:kAnimationDuration animations:^{
+                    
+                    self.titleViewAnimationBlock(titleView,YES);
+                }];
+            }else{
+                CGAffineTransform trans = CGAffineTransformMakeScale(1.2, 1.2);
+                trans = CGAffineTransformTranslate(trans, 0.1*titleView.bounds.size.width, 0);
+                [UIView animateWithDuration:kAnimationDuration animations:^{
+                    
+                    titleView.transform = trans;
+                }];
+            }
+            
         }
         if (_lastIndex != _tapIndex && _lastIndex >=0 && _lastIndex < self.titleViews.count) {
             
             TitleView *titleView = self.titleViews[_lastIndex];
-            [UIView animateWithDuration:kAnimationDuration animations:^{
+            if(self.titleViewAnimationBlock){
+                [UIView animateWithDuration:kAnimationDuration animations:^{
+                    
+                    self.titleViewAnimationBlock(titleView,NO);
+                }];
                 
-                titleView.transform = CGAffineTransformIdentity;
-            }];
+            }else{
+                [UIView animateWithDuration:kAnimationDuration animations:^{
+                    
+                    titleView.transform = CGAffineTransformIdentity;
+                }];
+                
+            }
         }
         
     }

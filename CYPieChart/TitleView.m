@@ -52,11 +52,13 @@
     
     CATextLayer *textLayer = [CATextLayer new];
     [textLayer setFont:(__bridge CFTypeRef _Nullable)([UIFont systemFontOfSize:12 weight:UIFontWeightLight])];
-    textLayer.foregroundColor = [UIColor blackColor].CGColor;
+    textLayer.foregroundColor = self.titleColor ? self.titleColor.CGColor : [UIColor blackColor].CGColor;
     textLayer.contentsScale = [UIScreen mainScreen].scale;
     textLayer.wrapped = YES;
     [self.layer addSublayer:textLayer];
     _textLayer = textLayer;
+    
+    
     
 }
 
@@ -97,6 +99,14 @@
     _rectColor = rectColor;
     _rectLayer.backgroundColor = rectColor.CGColor;
     
+}
+
+-(void)setTitleColor:(UIColor *)titleColor{
+    _titleColor = titleColor;
+    
+    if (_textLayer) {
+        _textLayer.foregroundColor = titleColor.CGColor;
+    }
 }
 
 

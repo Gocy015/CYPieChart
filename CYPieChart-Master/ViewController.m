@@ -38,6 +38,15 @@ static const NSInteger rightArrowTag = 22;
     self.pieChart.objects = obj;
     self.pieChart.colors = colors;
     self.pieChart.delegate = self;
+//    self.pieChart.titleViewAnimationBlock = ^(TitleView *v ,BOOL showing){
+//        if (showing) {
+//            v.titleColor = [UIColor whiteColor];
+//            v.backgroundColor = [UIColor darkGrayColor];
+//        }else{
+//            v.titleColor = [UIColor blackColor];
+//            v.backgroundColor = [UIColor clearColor];
+//        }
+//    };
 //    self.pieChart.innerRadius = 20;
     
     self.pieChart.sliceBorderWidth = 1;

@@ -20,6 +20,7 @@
 
 @property (nonatomic ,strong) UIColor *rectColor;
 @property (nonatomic ,copy) NSString *title;
+@property (nonatomic ,strong) UIColor *titleColor;
 
 @property (nonatomic ,weak) id <TitleViewEventDelegate> delegate;
 
