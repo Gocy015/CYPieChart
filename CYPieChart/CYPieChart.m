@@ -23,7 +23,7 @@
 @property (nonatomic ,strong) NSMutableArray *startAngles;
 @property (nonatomic ,strong) NSMutableArray *titleLabels;
 @property (nonatomic ,strong) NSMutableArray *titleViews;
-@property (nonatomic ,strong) NSMutableArray *fillColors;
+
 @property (nonatomic ,weak) HighlightPie *showPie;
 @property (nonatomic ,weak) HighlightPie *hidePie;
 
@@ -120,7 +120,7 @@ static const CGFloat kTitleViewInset =  6;
     
     UIBezierPath *shadow = [UIBezierPath new];
     
-    self.fillColors = [NSMutableArray arrayWithObjects:[UIColor orangeColor],[UIColor blueColor],[UIColor blackColor],nil];
+    self.colors = @[[UIColor orangeColor],[UIColor blueColor],[UIColor blackColor]];
     
     CGContextSaveGState(context);
     
@@ -141,7 +141,7 @@ static const CGFloat kTitleViewInset =  6;
             [path closePath];
         }
         
-        [self.fillColors[i] setFill];
+        [self.colors[i] setFill];
         [shadow appendPath:path];
         
         [path fill];
@@ -163,13 +163,10 @@ static const CGFloat kTitleViewInset =  6;
     self.layer.shadowPath = shadow.CGPath;
     
 #else
-    [self.paths removeAllObjects];
     
-    if (self.objects && self.fillColors) {
-        while (self.fillColors.count < self.objects.count) {
-            [self.fillColors addObject:[UIColor darkGrayColor]];
-        }
-    }
+    NSAssert(self.colors.count != 0, @"Color Array should have at least one element !");
+    
+    [self.paths removeAllObjects];
     
     CGContextRef context = UIGraphicsGetCurrentContext();
     
@@ -219,7 +216,7 @@ static const CGFloat kTitleViewInset =  6;
             
         }else{
             
-            [self.fillColors[i] setFill];
+            [self.colors[i % self.colors.count] setFill];
             
             [shadow appendPath:path];
             
@@ -346,7 +343,7 @@ static const CGFloat kTitleViewInset =  6;
         
         [self setNeedsDisplay];
         
-        self.showPie.fillColor = self.fillColors[_tapIndex];
+        self.showPie.fillColor = self.colors[_tapIndex % self.colors.count];
         self.showPie.path = self.paths[_tapIndex];
         self.showPie.borderWidth = self.sliceBorderWidth;
         self.showPie.borderColor = self.sliceBorderColor;
@@ -360,7 +357,7 @@ static const CGFloat kTitleViewInset =  6;
         CGFloat angle = start + range/2.0;
         
         CGAffineTransform trans;
-        if ([self.fillColors count] > 1) {
+        if ([self.colors count] > 1) {
             trans = CGAffineTransformMakeTranslation(cos(angle) * self.moveRadius, sin(angle) * self.moveRadius);
             trans = CGAffineTransformScale(trans, self.moveScale, self.moveScale);
         }else{
@@ -546,7 +543,7 @@ static const CGFloat kTitleViewInset =  6;
             for (NSUInteger i = 0; i < self.objects.count; ++i) {
                 TitleView *titleView = [TitleView new];
                 titleView.delegate = self;
-                titleView.rectColor = self.colors[i];
+                titleView.rectColor = self.colors[i % self.colors.count];
                 titleView.title = self.objects[i].title;
                 
                 [self addSubview:titleView];
@@ -651,8 +648,7 @@ static const CGFloat kTitleViewInset =  6;
 }
 
 -(void)setColors:(NSArray<UIColor *> *)colors{
-    _colors = colors;
-    self.fillColors = [NSMutableArray arrayWithArray:colors];
+    _colors = colors;\
     
 }
 
